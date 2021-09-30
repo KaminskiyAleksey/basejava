@@ -8,12 +8,12 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private final int RESUME_MAX_SIZE = 4; //10000;
-    private Resume[] storage = new Resume[RESUME_MAX_SIZE];
+    private final int RESUME_MAX_CAPACITY = 4; //10000;
+    private Resume[] storage = new Resume[RESUME_MAX_CAPACITY];
     private int size = 0;
 
     public void clear() {
-        Arrays.fill(storage,0,size - 1, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
@@ -21,7 +21,7 @@ public class ArrayStorage {
     если нашли, то возвращаем порядковый номер,
     если не нашли, то возвращаем -1
      */
-    public int check(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid() == uuid) {
                 return i;
@@ -32,51 +32,45 @@ public class ArrayStorage {
 
 
     public void update(Resume r) {
-        int i = check(r.getUuid());
-        if (i != -1){
-            System.out.println("Обновляем " + storage[i].getUuid());
-            //Здесь должна быть логика обновления storage[i]
-            //Сейчас обновлять нечего, т.к. у нас только одно ключевое поле в классе Resume
-        }
-        else{
-            System.out.println("Ошибка update. Резюме не найдено");
+        int index = findIndex(r.getUuid());
+        if (index != -1) {
+            System.out.println("Обновляем Resume. uuid = " + storage[index].getUuid());
+            storage[index] = r;
+        } else {
+            System.out.println("Ошибка update. Резюме не найдено. uuid = " + r.getUuid());
         }
     }
 
     public void save(Resume r) {
-        if (size == RESUME_MAX_SIZE){
+        if (size == RESUME_MAX_CAPACITY) {
             System.out.println("Ошибка save. Переполнение массива резюме");
             return;
         }
-        if (check(r.getUuid()) == -1){
-           storage[size] = r;
-           size++;
-        }
-        else{
-            System.out.println("Ошибка save. Резюме уже есть");
+        if (findIndex(r.getUuid()) == -1) {
+            storage[size] = r;
+            size++;
+        } else {
+            System.out.println("Ошибка save. Резюме уже есть. uuid = " + r.getUuid());
         }
     }
 
     public Resume get(String uuid) {
-        int i = check(uuid);
-        if (i != -1){
-            return storage[i];
+        int index = findIndex(uuid);
+        if (index != -1) {
+            return storage[index];
         }
-        else{
-            System.out.println("Ошибка get. Резюме не найдено");
-            return null;
-        }
+        System.out.println("Ошибка get. Резюме не найдено. uuid = " + uuid);
+        return null;
     }
 
     public void delete(String uuid) {
-        int i = check(uuid);
-        if (i != -1){
-            storage[i] = storage[size - 1];
+        int index = findIndex(uuid);
+        if (index != -1) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
-        }
-        else{
-            System.out.println("Ошибка delete. Резюме не найдено");
+        } else {
+            System.out.println("Ошибка delete. Резюме не найдено. uuid = " + uuid);
         }
     }
 
@@ -84,14 +78,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] allResume = new Resume[size];
-
-        allResume = Arrays.copyOf(storage, size);
-
-        return allResume;
+        return Arrays.copyOf(storage, size);
     }
 
-     public int size() {
+    public int size() {
         return size;
     }
 }
