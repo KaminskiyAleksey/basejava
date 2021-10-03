@@ -28,11 +28,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         int insertPos = -index - 1;
         System.arraycopy(storage, insertPos, storage, insertPos + 1, size - insertPos);
         storage[insertPos] = r;
-        size++;
     }
 
     protected void deleteResume(int index) {
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-        size--;
     }
 }
