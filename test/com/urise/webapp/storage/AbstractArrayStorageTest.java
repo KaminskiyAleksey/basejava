@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AbstractArrayStorageTest {
-    private Storage storage = new ArrayStorage();
+public abstract class AbstractArrayStorageTest {
+    private Storage storage; // = new ArrayStorage();
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -18,6 +18,11 @@ public class AbstractArrayStorageTest {
     private static final Resume resume1 = new Resume(UUID_1);
     private static final Resume resume2 = new Resume(UUID_2);
     private static final Resume resume3 = new Resume(UUID_3);
+
+    public AbstractArrayStorageTest(Storage storage) {
+        this.storage = storage;
+    }
+
 
     @Before
     public void setUp() throws Exception {
