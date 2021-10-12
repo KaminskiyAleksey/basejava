@@ -2,12 +2,13 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AbstractStorageTest {
+public abstract class AbstractStorageTest {
     private Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -83,7 +84,7 @@ public class AbstractStorageTest {
         Resume r = new Resume(UUID_2);
         storage.save(r);
     }
-/*
+
     @Test(expected = StorageException.class)
     public void saveOutOfBounds() throws Exception {
         Resume r;
@@ -97,7 +98,7 @@ public class AbstractStorageTest {
         }
         r = new Resume("guid" + AbstractArrayStorage.STORAGE_LIMIT);
         storage.save(r);
-    }*/
+    }
 
     @Test(expected = NotExistStorageException.class)
     public void delete() throws Exception {

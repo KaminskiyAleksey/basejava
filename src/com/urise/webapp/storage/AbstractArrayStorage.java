@@ -30,10 +30,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     void saveElement(Resume r, int key) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
-        } else {
-            insertElement(r, key);
-            size++;
         }
+        insertElement(r, key);
+        size++;
     }
 
     void deleteElement(int key) {
