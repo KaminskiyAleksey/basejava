@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    @Override
     protected void fillDeletedElement(int index) {
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -14,7 +13,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    @Override
     protected void insertElement(Resume r, int index) {
 //      http://codereview.stackexchange.com/questions/36221/binary-search-for-inserting-in-array#answer-36239
         int insertIdx = -index - 1;
@@ -22,8 +20,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         storage[insertIdx] = r;
     }
 
-    @Override
-    protected int getIndex(String uuid) {
+    protected Object getIndex(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
