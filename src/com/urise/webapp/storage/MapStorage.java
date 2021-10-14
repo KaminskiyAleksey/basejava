@@ -17,16 +17,10 @@ public class MapStorage extends AbstractStorage {
     }
 
     public Resume[] getAll() {
-        Resume[] resumes = new Resume[size()];
-        int index = 0;
-        for (Map.Entry<String, Resume> entry : storageMap.entrySet()) {
-            resumes[index] = entry.getValue();
-            index++;
-        }
-        return resumes;
+        return storageMap.values().toArray(new Resume[0]);
     }
 
-    protected Object getIndex(String uuid) {
+    protected Object getKey(String uuid) {
         return uuid;
     }
 
@@ -34,19 +28,19 @@ public class MapStorage extends AbstractStorage {
         return storageMap.containsKey(index.toString());
     }
 
-    void saveElement(Resume r, Object key) {
+    void saveResume(Resume r, Object key) {
         storageMap.put((String) key, r);
     }
 
-    void deleteElement(Object key) {
+    void deleteResume(Object key) {
         storageMap.remove((String) key);
     }
 
-    void updateElement(Resume r, Object key) {
+    void updateResume(Resume r, Object key) {
         storageMap.put((String) key, r);
     }
 
-    Resume getElement(Object key) {
+    Resume getResume(Object key) {
         return storageMap.get((String) key);
     }
 }

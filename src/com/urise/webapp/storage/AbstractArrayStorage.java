@@ -27,40 +27,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    void saveElement(Resume r, Object key) {
+    void saveResume(Resume r, Object key) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertElement(r, (int) key);
+        insertResume(r, (int) key);
         size++;
     }
 
-    void deleteElement(Object key) {
-        fillDeletedElement((int) key);
+    void deleteResume(Object key) {
+        fillDeletedResume((int) key);
         storage[size - 1] = null;
         size--;
     }
 
-    void updateElement(Resume r, Object key) {
+    void updateResume(Resume r, Object key) {
         storage[(int) key] = r;
     }
 
-    Resume getElement(Object key) {
+    Resume getResume(Object key) {
         return storage[(int) key];
     }
 
     protected boolean isExist(Object index) {
-        if ((int) index >= 0) {
-            return true;
-        }
-        return false;
+        return (int) index >= 0;
     }
 
-    abstract Object getIndex(String uuid);
+    abstract Object getKey(String uuid);
 
-    protected abstract void fillDeletedElement(int index);
+    protected abstract void fillDeletedResume(int index);
 
-    protected abstract void insertElement(Resume r, int index);
+    protected abstract void insertResume(Resume r, int index);
 
 
 }

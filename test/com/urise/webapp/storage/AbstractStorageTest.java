@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public abstract class AbstractStorageTest {
     private Storage storage;
 
@@ -68,7 +70,11 @@ public abstract class AbstractStorageTest {
 
         Resume[] expectedResumes = {resume1, resume2, resume3};
 
+        Arrays.sort(actualResumes);
+        Arrays.sort(expectedResumes);
+
         Assert.assertArrayEquals(expectedResumes, actualResumes);
+
     }
 
     @Test

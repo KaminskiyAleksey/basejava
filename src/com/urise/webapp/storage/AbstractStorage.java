@@ -7,26 +7,26 @@ import com.urise.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
     public void save(Resume r) {
         Object key = getNotExistedSearchKey(r.getUuid());
-        saveElement(r, key);
+        saveResume(r, key);
     }
 
     public void delete(String uuid) {
         Object key = getExistedSearchKey(uuid);
-        deleteElement(key);
+        deleteResume(key);
     }
 
     public void update(Resume r) {
         Object key = getExistedSearchKey(r.getUuid());
-        updateElement(r, key);
+        updateResume(r, key);
     }
 
     public Resume get(String uuid) {
         Object key = getExistedSearchKey(uuid);
-        return getElement(key);
+        return getResume(key);
     }
 
     private Object getNotExistedSearchKey(String uuid) {
-        Object index = getIndex(uuid);
+        Object index = getKey(uuid);
         if (isExist(index)) {
             throw new ExistStorageException(uuid);
         }
@@ -35,22 +35,22 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private Object getExistedSearchKey(String uuid) {
-        Object index = getIndex(uuid);
+        Object index = getKey(uuid);
         if (!isExist(index)) {
             throw new NotExistStorageException(uuid);
         }
         return index;
     }
 
-    abstract Object getIndex(String uuid);
+    abstract Object getKey(String uuid);
 
     abstract boolean isExist(Object index);
 
-    abstract void saveElement(Resume r, Object key);
+    abstract void saveResume(Resume r, Object key);
 
-    abstract void deleteElement(Object key);
+    abstract void deleteResume(Object key);
 
-    abstract void updateElement(Resume r, Object key);
+    abstract void updateResume(Resume r, Object key);
 
-    abstract Resume getElement(Object key);
+    abstract Resume getResume(Object key);
 }

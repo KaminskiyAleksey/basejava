@@ -20,7 +20,7 @@ public class ListStorage extends AbstractStorage {
         return storageList.toArray(new Resume[storageList.size()]);
     }
 
-    protected Object getIndex(String uuid) {
+    protected Object getKey(String uuid) {
         for (int i = 0; i < storageList.size(); i++) {
             if (storageList.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -30,25 +30,22 @@ public class ListStorage extends AbstractStorage {
     }
 
     protected boolean isExist(Object index) {
-        if ((Integer) index >= 0) {
-            return true;
-        }
-        return false;
+        return (int)index >= 0;
     }
 
-    void saveElement(Resume r, Object key) {
+    void saveResume(Resume r, Object key) {
         storageList.add(r);
     }
 
-    void deleteElement(Object key) {
+    void deleteResume(Object key) {
         storageList.remove((int) key);
     }
 
-    void updateElement(Resume r, Object key) {
+    void updateResume(Resume r, Object key) {
         storageList.set((int) key, r);
     }
 
-    Resume getElement(Object key) {
+    Resume getResume(Object key) {
         return storageList.get((int) key);
     }
 }
