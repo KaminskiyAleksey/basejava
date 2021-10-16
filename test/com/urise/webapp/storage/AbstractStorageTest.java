@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractStorageTest {
     protected Storage storage;
@@ -25,11 +26,13 @@ public abstract class AbstractStorageTest {
     private static final Resume resume1;
     private static final Resume resume2;
     private static final Resume resume3;
+    private static final Resume resume4;
 
     static {
         resume1 = new Resume(UUID_1,FIO_1);
         resume2 = new Resume(UUID_2,FIO_2);
         resume3 = new Resume(UUID_3,FIO_3);
+        resume4 = new Resume(UUID_4,FIO_4);
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -70,15 +73,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAll() throws Exception {
-        Resume[] actualResumes = storage.getAll();
+        List<Resume> actualResumes = storage. getAllSorted();
 
-        Resume[] expectedResumes = {resume1, resume2, resume3};
+        List<Resume> expectedResumes = Arrays.asList(resume1, resume2, resume3);
 
-        Arrays.sort(actualResumes);
-        Arrays.sort(expectedResumes);
-
-        Assert.assertArrayEquals(expectedResumes, actualResumes);
-
+        Assert.assertEquals(expectedResumes,actualResumes);
     }
 
     @Test
