@@ -26,8 +26,8 @@ public class MapUuidStorage extends AbstractStorage {
         return uuid;
     }
 
-    protected boolean isExist(Object index) {
-        return storageMap.containsKey(index.toString());
+    protected boolean isExist(Object key) {
+        return storageMap.containsKey(key.toString());
     }
 
     void saveResume(Resume r, Object key) {

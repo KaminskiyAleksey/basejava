@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AbstractArrayStorageTest extends AbstractStorageTest {
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }
@@ -15,13 +15,13 @@ public class AbstractArrayStorageTest extends AbstractStorageTest {
         Resume r;
         try {
             for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                r = new Resume();
+                r = new Resume("uuid"+i+1,"Fio"+i+1);
                 storage.save(r);
             }
         } catch (StorageException e) {
             Assert.fail("Произошло переполнение раньше ожидаемого");
         }
-        r = new Resume();
+        r = new Resume("uuid"+AbstractArrayStorage.STORAGE_LIMIT,"Fio"+AbstractArrayStorage.STORAGE_LIMIT);
         storage.save(r);
     }
 

@@ -3,7 +3,6 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -30,8 +29,8 @@ public class ListStorage extends AbstractStorage {
         return -1;
     }
 
-    protected boolean isExist(Object index) {
-        return (int)index >= 0;
+    protected boolean isExist(Object key) {
+        return (int)key >= 0;
     }
 
     void saveResume(Resume r, Object key) {
