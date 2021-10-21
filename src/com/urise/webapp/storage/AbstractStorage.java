@@ -6,45 +6,56 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
+
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
+
     public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> list = copyAll();
         Collections.sort(list);
         return list;
     }
 
     public void save(Resume r) {
-        Object key = getNotExistedSearchKey(r.getUuid());
+        LOG.info("Save " + r);
+        SK key = getNotExistedSearchKey(r.getUuid());
         saveResume(r, key);
     }
 
     public void delete(String uuid) {
-        Object key = getExistedSearchKey(uuid);
+        LOG.info("Delete " + uuid);
+        SK key = getExistedSearchKey(uuid);
         deleteResume(key);
     }
 
     public void update(Resume r) {
-        Object key = getExistedSearchKey(r.getUuid());
+        LOG.info("Update " + r);
+        SK key = getExistedSearchKey(r.getUuid());
         updateResume(r, key);
     }
 
     public Resume get(String uuid) {
-        Object key = getExistedSearchKey(uuid);
+        LOG.info("Get " + uuid);
+        SK key = getExistedSearchKey(uuid);
         return getResume(key);
     }
 
-    private Object getNotExistedSearchKey(String uuid) {
-        Object key = getKey(uuid);
+    private SK getNotExistedSearchKey(String uuid) {
+        SK key = getKey(uuid);
         if (isExist(key)) {
+            LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return key;
     }
 
-    private Object getExistedSearchKey(String uuid) {
-        Object key = getKey(uuid);
+    private SK getExistedSearchKey(String uuid) {
+        SK key = getKey(uuid);
         if (!isExist(key)) {
+            LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return key;
@@ -52,15 +63,15 @@ public abstract class AbstractStorage implements Storage {
 
     abstract List<Resume> copyAll();
 
-    abstract Object getKey(String uuid);
+    abstract SK getKey(String uuid);
 
-    abstract boolean isExist(Object key);
+    abstract boolean isExist(SK key);
 
-    abstract void saveResume(Resume r, Object key);
+    abstract void saveResume(Resume r, SK key);
 
-    abstract void deleteResume(Object key);
+    abstract void deleteResume(SK key);
 
-    abstract void updateResume(Resume r, Object key);
+    abstract void updateResume(Resume r, SK key);
 
-    abstract Resume getResume(Object key);
+    abstract Resume getResume(SK key);
 }

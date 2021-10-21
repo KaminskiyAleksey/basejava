@@ -4,10 +4,9 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -29,37 +28,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
-    void saveResume(Resume r, Object key) {
+    void saveResume(Resume r, Integer key) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertResume(r, (int) key);
+        insertResume(r, key);
         size++;
     }
 
-    void deleteResume(Object key) {
-        fillDeletedResume((int) key);
+    void deleteResume(Integer key) {
+        fillDeletedResume(key);
         storage[size - 1] = null;
         size--;
     }
 
-    void updateResume(Resume r, Object key) {
+    void updateResume(Resume r, Integer key) {
         storage[(int) key] = r;
     }
 
-    Resume getResume(Object key) {
-        return storage[(int) key];
+    Resume getResume(Integer key) {
+        return storage[key];
     }
 
-    protected boolean isExist(Object index) {
-        return (int) index >= 0;
+    protected boolean isExist(Integer index) {
+        return index >= 0;
     }
 
-    abstract Object getKey(String uuid);
+    abstract Integer getKey(String uuid);
 
-    protected abstract void fillDeletedResume(int index);
+    protected abstract void fillDeletedResume(Integer index);
 
-    protected abstract void insertResume(Resume r, int index);
+    protected abstract void insertResume(Resume r, Integer index);
 
 
 }

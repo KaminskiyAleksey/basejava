@@ -4,16 +4,16 @@ import com.urise.webapp.model.Resume;
 
 public class ArrayStorage extends AbstractArrayStorage {
 
-    protected void fillDeletedResume(int index) {
+    protected void fillDeletedResume(Integer index) {
         storage[index] = storage[size - 1];
     }
 
-    protected void insertResume(Resume r, int index) {
+    protected void insertResume(Resume r, Integer index) {
         storage[size] = r;
     }
 
-    protected Object getKey(String uuid) {
-        for (int i = 0; i < size; i++) {
+    protected Integer getKey(String uuid) {
+        for (Integer i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
                 return i;
             }
