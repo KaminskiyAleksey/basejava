@@ -9,8 +9,8 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private String fullName;
-    private Map<ContactType, String> contact = new HashMap<>();
-    private Map<SectionType, AbstractSection> section = new HashMap<>();
+    private Map<ContactType, String> contact ;
+    private Map<SectionType, AbstractSection> section ;
 
     public Resume(String fullName) {
         this.uuid = UUID.randomUUID().toString();
@@ -22,12 +22,28 @@ public class Resume implements Comparable<Resume> {
         this.fullName = fullName;
     }
 
+    public void setContact(Map<ContactType, String> contact) {
+        this.contact = contact;
+    }
+
+    public void setSection(Map<SectionType, AbstractSection> section) {
+        this.section = section;
+    }
+
     public String getUuid() {
         return uuid;
     }
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Map<ContactType, String> getContact() {
+        return contact;
+    }
+
+    public Map<SectionType, AbstractSection> getSection() {
+        return section;
     }
 
     @Override
