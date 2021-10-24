@@ -31,4 +31,14 @@ public class Position {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "positionName='" + positionName + '\'' +
+                ", beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

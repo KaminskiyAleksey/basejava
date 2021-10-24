@@ -1,41 +1,18 @@
 package com.urise.webapp;
 
-import java.time.LocalDate;
-import java.util.*;
-
 import com.urise.webapp.model.*;
 
-import static com.urise.webapp.model.ContactType.*;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.urise.webapp.model.ContactType.MAIL;
+import static com.urise.webapp.model.ContactType.PHONE;
 import static com.urise.webapp.model.SectionType.*;
 
 public class ResumeTestData {
-    private static void printSkill(Map<SectionType, AbstractSection> mapSectionGet, String title, SectionType sectionType) {
-        System.out.println("");
-        System.out.println(title);
-        for (String str : ((SkillsSection) mapSectionGet.get(sectionType)).getItems()) {
-            System.out.println(str);
-        }
-    }
-
-    private static void printOrganization(Map<SectionType, AbstractSection> mapSectionGet, String title, SectionType sectionType) {
-        List<Position> positionList;
-
-        System.out.println("");
-        System.out.println(title);
-        List<Organization> organizationList = ((OrganizationSection) mapSectionGet.get(sectionType)).getItems();
-        for (Organization organization : organizationList) {
-            System.out.println(organization.getOrganizationName());
-            positionList = organization.getPosition();
-            for (Position position : positionList) {
-                System.out.println(position.getPositionName());
-                System.out.println(position.getBeginDate());
-                System.out.println(position.getEndDate());
-                System.out.println(position.getDescription());
-                System.out.println("");
-            }
-        }
-    }
-
     public static void main(String[] args) {
         //CONTACTS
         Map<ContactType, String> mapContact = new HashMap<ContactType, String>();
@@ -110,13 +87,8 @@ public class ResumeTestData {
 
         Map<SectionType, AbstractSection> mapSectionGet = resume.getSection();
 
-        printSkill(mapSectionGet, "Личные качества", PERSONAL);
-        printSkill(mapSectionGet, "Позиция", OBJECTIVE);
-        printSkill(mapSectionGet, "Достижения", ACHIEVEMENT);
-        printSkill(mapSectionGet, "Квалификация", QUALIFICATIONS);
-
-        printOrganization(mapSectionGet, "Опыт работы", EXPERIENCE);
-        printOrganization(mapSectionGet, "Образование", EDUCATION);
-
+        for (Map.Entry<SectionType, AbstractSection> entry : mapSectionGet.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
     }
 }

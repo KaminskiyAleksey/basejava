@@ -19,4 +19,12 @@ public class Organization {
     public List<Position> getPosition() {
         return position;
     }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "organizationName='" + organizationName + '\'' +
+                ", position=" + position +
+                '}';
+    }
 }
