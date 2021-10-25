@@ -3,17 +3,15 @@ package com.urise.webapp;
 import com.urise.webapp.model.*;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.urise.webapp.model.ContactType.MAIL;
 import static com.urise.webapp.model.ContactType.PHONE;
 import static com.urise.webapp.model.SectionType.*;
 
 public class ResumeTestData {
-    public static void main(String[] args) {
+
+    public static Resume fillResume(String uuid, String fullName) {
         //CONTACTS
         Map<ContactType, String> mapContact = new HashMap<>();
         mapContact.put(PHONE, "+7(921) 855-0482");
@@ -70,9 +68,15 @@ public class ResumeTestData {
         mapSection.put(EXPERIENCE, organizationSectionExperience);
         mapSection.put(EDUCATION, organizationSectionEducation);
 
-        Resume resume = new Resume("Григорий Кислин");
+        Resume resume = new Resume(uuid, fullName);
         resume.setContact(mapContact);
         resume.setSection(mapSection);
+
+        return resume;
+    }
+
+    public static void main(String[] args) {
+        Resume resume = fillResume(UUID.randomUUID().toString(), "Григорий Кислин");
 
         //Print
         System.out.println("Uuid = " + resume.getUuid());

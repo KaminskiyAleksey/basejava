@@ -10,6 +10,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.urise.webapp.ResumeTestData.fillResume;
+
 public abstract class AbstractStorageTest {
     protected Storage storage;
 
@@ -29,10 +31,10 @@ public abstract class AbstractStorageTest {
     private static final Resume resume4;
 
     static {
-        resume1 = new Resume(UUID_1,FIO_1);
-        resume2 = new Resume(UUID_2,FIO_2);
-        resume3 = new Resume(UUID_3,FIO_3);
-        resume4 = new Resume(UUID_4,FIO_4);
+        resume1 = fillResume(UUID_1, FIO_1);
+        resume2 = fillResume(UUID_2, FIO_2);
+        resume3 = fillResume(UUID_3, FIO_3);
+        resume4 = fillResume(UUID_4, FIO_4);
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -60,29 +62,29 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume r = new Resume(UUID_2,FIO_2);
+        Resume r = fillResume(UUID_2, FIO_2);
         storage.update(r);
         Assert.assertEquals(r, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() throws Exception {
-        Resume r = new Resume(UUID_4,FIO_4);
+        Resume r = fillResume(UUID_4, FIO_4);
         storage.update(r);
     }
 
     @Test
     public void getAll() throws Exception {
-        List<Resume> actualResumes = storage. getAllSorted();
+        List<Resume> actualResumes = storage.getAllSorted();
 
         List<Resume> expectedResumes = Arrays.asList(resume1, resume2, resume3);
 
-        Assert.assertEquals(expectedResumes,actualResumes);
+        Assert.assertEquals(expectedResumes, actualResumes);
     }
 
     @Test
     public void save() throws Exception {
-        Resume r = new Resume(UUID_4,FIO_4);
+        Resume r = fillResume(UUID_4, FIO_4);
         storage.save(r);
         Assert.assertEquals(r, storage.get(UUID_4));
         Assert.assertEquals(4, storage.size());
@@ -90,7 +92,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = ExistStorageException.class)
     public void saveDuplicate() throws Exception {
-        Resume r = new Resume(UUID_2,FIO_2);
+        Resume r = fillResume(UUID_2, FIO_2);
         storage.save(r);
     }
 
