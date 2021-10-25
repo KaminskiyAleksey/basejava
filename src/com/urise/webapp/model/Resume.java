@@ -13,8 +13,7 @@ public class Resume implements Comparable<Resume> {
     private Map<SectionType, AbstractSection> section;
 
     public Resume(String fullName) {
-        this.uuid = UUID.randomUUID().toString();
-        new Resume(this.uuid, fullName);
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {

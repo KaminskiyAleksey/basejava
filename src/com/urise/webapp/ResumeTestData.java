@@ -15,7 +15,7 @@ import static com.urise.webapp.model.SectionType.*;
 public class ResumeTestData {
     public static void main(String[] args) {
         //CONTACTS
-        Map<ContactType, String> mapContact = new HashMap<ContactType, String>();
+        Map<ContactType, String> mapContact = new HashMap<>();
         mapContact.put(PHONE, "+7(921) 855-0482");
         mapContact.put(MAIL, "gkislin@yandex.ru");
 
@@ -62,7 +62,7 @@ public class ResumeTestData {
         SkillsSection achivementSection = new SkillsSection(listAchivement);
 
         //Resume
-        Map<SectionType, AbstractSection> mapSection = new HashMap<SectionType, AbstractSection>();
+        Map<SectionType, AbstractSection> mapSection = new HashMap<>();
         mapSection.put(PERSONAL, personalSection);
         mapSection.put(OBJECTIVE, objectiveSection);
         mapSection.put(ACHIEVEMENT, achivementSection);
