@@ -43,7 +43,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     void updateResume(Resume r, Integer key) {
-        storage[(int) key] = r;
+        storage[key] = r;
     }
 
     Resume getResume(Integer key) {
@@ -56,9 +56,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     abstract Integer getKey(String uuid);
 
-    protected abstract void fillDeletedResume(Integer index);
+    protected abstract void fillDeletedResume(int index);
 
-    protected abstract void insertResume(Resume r, Integer index);
+    protected abstract void insertResume(Resume r, int index);
 
 
 }

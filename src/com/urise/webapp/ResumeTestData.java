@@ -2,8 +2,10 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.time.Month;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static com.urise.webapp.model.ContactType.MAIL;
 import static com.urise.webapp.model.ContactType.PHONE;
@@ -12,33 +14,25 @@ import static com.urise.webapp.model.SectionType.*;
 public class ResumeTestData {
 
     public static Resume fillResume(String uuid, String fullName) {
-        //CONTACTS
-        Map<ContactType, String> mapContact = new HashMap<>();
-        mapContact.put(PHONE, "+7(921) 855-0482");
-        mapContact.put(MAIL, "gkislin@yandex.ru");
 
         //EXPERIENCE
-        Position position1 = new Position("Старший разработчик (backend)", LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO");
-        Position position2 = new Position("Автор проекта", LocalDate.of(2013, 10, 1), LocalDate.now(), "Создание, организация и проведение Java онлайн проектов и стажировок");
+        Organization.Position position1 = new Organization.Position(2014,Month.of(10),2016,Month.of(1),"Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO");
+        Organization.Position position2 = new Organization.Position(2013, Month.of(10),"Автор проекта",  "Создание, организация и проведение Java онлайн проектов и стажировок");
 
-        List<Position> listPosition1 = Arrays.asList(position1);
-        Organization organization1 = new Organization("Wrike", listPosition1);
+        Organization organization1 = new Organization("Wrike", "https://www.wrike.com/", position1);
 
-        List<Position> listPosition2 = Arrays.asList(position2);
-        Organization organization2 = new Organization("Java Online Projects", listPosition2);
+        Organization organization2 = new Organization("Java Online Projects", "http://javaops.ru/",position2);
 
         List<Organization> listOrganisation = Arrays.asList(organization1, organization2);
         OrganizationSection organizationSectionExperience = new OrganizationSection(listOrganisation);
 
         //EDUCATION
-        Position education1 = new Position("Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML", LocalDate.of(2011, 3, 1), LocalDate.of(2011, 3, 1), null);
-        Position education2 = new Position("Functional Programming Principles in Scala by Martin Odersky", LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1), null);
+        Organization.Position education1 = new Organization.Position(2011,Month.of(3),2011,Month.of(3),"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML",  null);
+        Organization.Position education2 = new Organization.Position(2013,Month.of(3),2013,Month.of(5),"Functional Programming Principles in Scala by Martin Odersky", null);
 
-        List<Position> listEducation1 = Arrays.asList(education1);
-        Organization colledge1 = new Organization("Luxoft", listEducation1);
+        Organization colledge1 = new Organization("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", education1);
 
-        List<Position> listEducation2 = Arrays.asList(education2);
-        Organization colledge2 = new Organization("Coursera", listEducation2);
+        Organization colledge2 = new Organization("Coursera","https://www.coursera.org/course/progfun", education2);
 
         List<Organization> listColledge = Arrays.asList(colledge1, colledge2);
         OrganizationSection organizationSectionEducation = new OrganizationSection(listColledge);
@@ -60,17 +54,19 @@ public class ResumeTestData {
         SkillsSection achivementSection = new SkillsSection(listAchivement);
 
         //Resume
-        Map<SectionType, AbstractSection> mapSection = new HashMap<>();
-        mapSection.put(PERSONAL, personalSection);
-        mapSection.put(OBJECTIVE, objectiveSection);
-        mapSection.put(ACHIEVEMENT, achivementSection);
-        mapSection.put(QUALIFICATIONS, qualificationsSection);
-        mapSection.put(EXPERIENCE, organizationSectionExperience);
-        mapSection.put(EDUCATION, organizationSectionEducation);
-
         Resume resume = new Resume(uuid, fullName);
-        resume.setContact(mapContact);
-        resume.setSection(mapSection);
+
+        //CONTACTS
+
+        resume.addContact(PHONE, "+7(921) 855-0482");
+        resume.addContact(MAIL, "gkislin@yandex.ru");
+
+        resume.addSection(PERSONAL, personalSection);
+        resume.addSection(OBJECTIVE, objectiveSection);
+        resume.addSection(ACHIEVEMENT, achivementSection);
+        resume.addSection(QUALIFICATIONS, qualificationsSection);
+        resume.addSection(EXPERIENCE, organizationSectionExperience);
+        resume.addSection(EDUCATION, organizationSectionEducation);
 
         return resume;
     }
@@ -84,15 +80,25 @@ public class ResumeTestData {
 
         System.out.println("");
         System.out.println("Контакты");
-        Map<ContactType, String> mapContactGet = resume.getContact();
+
+        for (ContactType contactType : ContactType.values()) {
+            System.out.print(contactType + " " + resume.getContact(contactType));
+        }
+
+        /*Map<ContactType, String> mapContactGet = resume.getContact();
         for (Map.Entry<ContactType, String> entry : mapContactGet.entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
+        }*/
+
+        for (SectionType sectionType : SectionType.values()) {
+            System.out.print(sectionType + " " + resume.getSection(sectionType));
         }
 
-        Map<SectionType, AbstractSection> mapSectionGet = resume.getSection();
+        /*SectionType sectionType;
+        Map<SectionType, Section> mapSectionGet = resume.getSection(sectionType);
 
-        for (Map.Entry<SectionType, AbstractSection> entry : mapSectionGet.entrySet()) {
+        for (Map.Entry<SectionType, Section> entry : mapSectionGet.entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
-        }
+        }*/
     }
 }

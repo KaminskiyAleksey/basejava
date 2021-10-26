@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 import java.util.List;
 
-public class SkillsSection extends AbstractSection {
+public class SkillsSection extends Section {
     private List<String> items;
 
     public SkillsSection(List<String> items) {

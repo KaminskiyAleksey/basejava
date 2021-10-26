@@ -4,11 +4,11 @@ import com.urise.webapp.model.Resume;
 
 public class ArrayStorage extends AbstractArrayStorage {
 
-    protected void fillDeletedResume(Integer index) {
+    protected void fillDeletedResume(int index) {
         storage[index] = storage[size - 1];
     }
 
-    protected void insertResume(Resume r, Integer index) {
+    protected void insertResume(Resume r, int index) {
         storage[size] = r;
     }
 

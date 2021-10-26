@@ -38,13 +38,15 @@ public class MainFile {
     public static void printDirectoryFiles(File dir) {
         File[] files = dir.listFiles();
 
-        for (File file : files) {
-            if (file.isFile()) {
-                System.out.println("File: " + file.getAbsolutePath());
-            } else if (file.isDirectory()) {
-                System.out.println("");
-                System.out.println("Directory: " + file.getAbsolutePath());
-                printDirectoryFiles(file);
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    System.out.println("File: " + file.getAbsolutePath());
+                } else if (file.isDirectory()) {
+                    System.out.println("");
+                    System.out.println("Directory: " + file.getAbsolutePath());
+                    printDirectoryFiles(file);
+                }
             }
         }
     }
