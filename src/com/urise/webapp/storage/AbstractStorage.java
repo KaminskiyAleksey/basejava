@@ -14,7 +14,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
-        List<Resume> list = copyAll();
+        List<Resume> list = doCopyAll();
         Collections.sort(list);
         return list;
     }
@@ -22,29 +22,29 @@ public abstract class AbstractStorage<SK> implements Storage {
     public void save(Resume r) {
         LOG.info("Save " + r);
         SK key = getNotExistedSearchKey(r.getUuid());
-        saveResume(r, key);
+        doSave(r, key);
     }
 
     public void delete(String uuid) {
         LOG.info("Delete " + uuid);
         SK key = getExistedSearchKey(uuid);
-        deleteResume(key);
+        doDelete(key);
     }
 
     public void update(Resume r) {
         LOG.info("Update " + r);
         SK key = getExistedSearchKey(r.getUuid());
-        updateResume(r, key);
+        doUpdate(r, key);
     }
 
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
         SK key = getExistedSearchKey(uuid);
-        return getResume(key);
+        return doGet(key);
     }
 
     private SK getNotExistedSearchKey(String uuid) {
-        SK key = getKey(uuid);
+        SK key = getSearchKey(uuid);
         if (isExist(key)) {
             LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
@@ -53,7 +53,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     private SK getExistedSearchKey(String uuid) {
-        SK key = getKey(uuid);
+        SK key = getSearchKey(uuid);
         if (!isExist(key)) {
             LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
@@ -61,17 +61,17 @@ public abstract class AbstractStorage<SK> implements Storage {
         return key;
     }
 
-    abstract List<Resume> copyAll();
+    abstract List<Resume> doCopyAll();
 
-    abstract SK getKey(String uuid);
+    abstract SK getSearchKey(String uuid);
 
     abstract boolean isExist(SK key);
 
-    abstract void saveResume(Resume r, SK key);
+    abstract void doSave(Resume r, SK key);
 
-    abstract void deleteResume(SK key);
+    abstract void doDelete(SK key);
 
-    abstract void updateResume(Resume r, SK key);
+    abstract void doUpdate(Resume r, SK key);
 
-    abstract Resume getResume(SK key);
+    abstract Resume doGet(SK key);
 }

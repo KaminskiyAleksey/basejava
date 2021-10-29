@@ -18,11 +18,11 @@ public class MapUuidStorage extends AbstractStorage<String> {
         storageMap.clear();
     }
 
-    public List<Resume> copyAll(){
+    public List<Resume> doCopyAll(){
         return new ArrayList<>(storageMap.values());
     }
 
-    protected String getKey(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
@@ -30,19 +30,19 @@ public class MapUuidStorage extends AbstractStorage<String> {
         return storageMap.containsKey(key.toString());
     }
 
-    void saveResume(Resume r, String key) {
+    void doSave(Resume r, String key) {
         storageMap.put(key, r);
     }
 
-    void deleteResume(String key) {
+    void doDelete(String key) {
         storageMap.remove(key);
     }
 
-    void updateResume(Resume r, String key) {
+    void doUpdate(Resume r, String key) {
         storageMap.put( key, r);
     }
 
-    Resume getResume(String key) {
+    Resume doGet(String key) {
         return storageMap.get(key);
     }
 }

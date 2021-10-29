@@ -10,11 +10,11 @@ import java.util.Map;
 public class MapResumeStorage extends AbstractStorage<Resume> {
     private Map<String, Resume> storageMap = new HashMap<>();
 
-    protected Resume getKey(String uuid) {
+    protected Resume getSearchKey(String uuid) {
         return storageMap.get(uuid);
     }
 
-    void updateResume(Resume r, Resume resume) {
+    void doUpdate(Resume r, Resume resume) {
         storageMap.put(r.getUuid(), r);
     }
 
@@ -22,19 +22,19 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
         return resume != null;
     }
 
-    void saveResume(Resume r, Resume resume) {
+    void doSave(Resume r, Resume resume) {
         storageMap.put(r.getUuid(), r);
     }
 
-    Resume getResume(Resume resume) {
+    Resume doGet(Resume resume) {
         return resume;
     }
 
-    void deleteResume(Resume resume) {
+    void doDelete(Resume resume) {
         storageMap.remove(resume.getUuid());
     }
 
-    public List<Resume> copyAll(){
+    public List<Resume> doCopyAll(){
         return new ArrayList<>(storageMap.values());
     }
 

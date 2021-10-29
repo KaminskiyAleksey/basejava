@@ -16,11 +16,11 @@ public class ListStorage extends AbstractStorage<Integer> {
         storageList.clear();
     }
 
-    public List<Resume> copyAll(){
+    public List<Resume> doCopyAll(){
         return new ArrayList<>(storageList);
     }
 
-    protected Integer getKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < storageList.size(); i++) {
             if (storageList.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -33,19 +33,19 @@ public class ListStorage extends AbstractStorage<Integer> {
         return key >= 0;
     }
 
-    void saveResume(Resume r, Integer key) {
+    void doSave(Resume r, Integer key) {
         storageList.add(r);
     }
 
-    void deleteResume(Integer key) {
+    void doDelete(Integer key) {
         storageList.remove((int) key);
     }
 
-    void updateResume(Resume r, Integer key) {
+    void doUpdate(Resume r, Integer key) {
         storageList.set(key, r);
     }
 
-    Resume getResume(Integer key) {
+    Resume doGet(Integer key) {
         return storageList.get(key);
     }
 }

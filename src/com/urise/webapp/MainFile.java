@@ -32,20 +32,20 @@ public class MainFile {
 
         System.out.println("");
         System.out.println("Recursion:");
-        printDirectoryFiles(dir);
+        printDirectoryFiles(dir,"");
     }
 
-    public static void printDirectoryFiles(File dir) {
+    public static void printDirectoryFiles(File dir, String indent) {
         File[] files = dir.listFiles();
 
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    System.out.println("File: " + file.getAbsolutePath());
+                    System.out.println(indent + "File: " + file.getName());
                 } else if (file.isDirectory()) {
                     System.out.println("");
-                    System.out.println("Directory: " + file.getAbsolutePath());
-                    printDirectoryFiles(file);
+                    System.out.println(indent + "Dir:  " + file.getName());
+                    printDirectoryFiles(file," ");
                 }
             }
         }
