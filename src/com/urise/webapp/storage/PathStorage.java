@@ -31,14 +31,6 @@ public class PathStorage extends AbstractStorage<Path> {
         }
     }
 
-    private Stream<Path> diectoryFilesList() {
-        try {
-            return Files.list(directory);
-        } catch (IOException e) {
-            throw new StorageException("Directory read error", e);
-        }
-    }
-
     @Override
     public void clear() {
         diectoryFilesList().forEach(this::doDelete);
@@ -99,7 +91,15 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        return diectoryFilesList().map(filePath -> doGet(filePath)).collect(Collectors.toList());
+        return diectoryFilesList().map(this::doGet).collect(Collectors.toList());
+    }
+
+    private Stream<Path> diectoryFilesList() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory read error", e);
+        }
     }
 
     private String getFileName(Path path) {

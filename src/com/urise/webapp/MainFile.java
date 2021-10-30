@@ -3,6 +3,8 @@ package com.urise.webapp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class MainFile {
     public static void main(String[] args) {
@@ -37,14 +39,14 @@ public class MainFile {
 
     public static void printDirectoryFiles(File dir, String indent) {
         File[] files = dir.listFiles();
+        Arrays.sort(files);
 
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    System.out.println(indent + "File: " + file.getName());
+                    System.out.println(indent + "F: " + file.getName());
                 } else if (file.isDirectory()) {
-                    System.out.println("");
-                    System.out.println(indent + "Dir:  " + file.getName());
+                    System.out.println(indent + "D: " + file.getName());
                     printDirectoryFiles(file," ");
                 }
             }
