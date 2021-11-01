@@ -47,7 +47,7 @@ public class MainFile {
                     System.out.println(indent + "F: " + file.getName());
                 } else if (file.isDirectory()) {
                     System.out.println(indent + "D: " + file.getName());
-                    printDirectoryFiles(file," ");
+                    printDirectoryFiles(file,indent + "  ");
                 }
             }
         }
