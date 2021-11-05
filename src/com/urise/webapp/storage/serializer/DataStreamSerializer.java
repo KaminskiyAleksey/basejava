@@ -2,15 +2,18 @@ package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.AbstractStorage;
+import com.urise.webapp.util.LocalDateAdapter;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import static com.urise.webapp.util.NullDataString.*;
 
 public class DataStreamSerializer implements StreamSerializer {
-    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
@@ -49,14 +52,13 @@ public class DataStreamSerializer implements StreamSerializer {
             for (int i = 0; i < sizeSection; i++) {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 section = readSection(sectionType, dis);
-                resume.addSection(sectionType,  section);
+                resume.addSection(sectionType, section);
             }
             return resume;
         }
     }
 
     private void writeSection(SectionType sectionName, Section section, DataOutputStream dos) throws IOException {
-        LOG.info("write Section = " + sectionName);
         switch (sectionName) {
             case PERSONAL:
             case OBJECTIVE:
@@ -65,8 +67,7 @@ public class DataStreamSerializer implements StreamSerializer {
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 List<String> items = ((ListSection) section).getItems();
-                dos.write(items.size());
-                LOG.info("size = " + items.size());
+                dos.writeInt(items.size());
                 for (String str : ((ListSection) section).getItems()) {
                     dos.writeUTF(str);
                 }
@@ -74,8 +75,7 @@ public class DataStreamSerializer implements StreamSerializer {
             case EXPERIENCE:
             case EDUCATION:
                 List<Organization> organizationItems = ((OrganizationSection) section).getOrganizations();
-                dos.write(organizationItems.size());
-                LOG.info("size = " + organizationItems.size());
+                dos.writeInt(organizationItems.size());
                 for (Organization organization : ((OrganizationSection) section).getOrganizations()) {
                     writeOrganization(organization, dos);
                 }
@@ -83,71 +83,70 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private void writeOrganization(Organization organization , DataOutputStream dos) throws IOException {
-        dos.writeUTF(organization.getHomePage().getName());
-        dos.writeUTF(organization.getHomePage().getUrl());
+    private void writeOrganization(Organization organization, DataOutputStream dos) throws IOException {
+        dos.writeUTF(writeNull(organization.getHomePage().getName()));
+        dos.writeUTF(writeNull(organization.getHomePage().getUrl()));
         List<Organization.Position> positions = organization.getPositions();
-        dos.write(positions.size());
+        dos.writeInt(positions.size());
         for (Organization.Position position : organization.getPositions()) {
             writePosition(position, dos);
         }
     }
 
-    private void writePosition(Organization.Position position , DataOutputStream dos) throws IOException {
+    private void writePosition(Organization.Position position, DataOutputStream dos) throws IOException {
         dos.writeUTF(position.getStartDate().toString());
         dos.writeUTF(position.getEndDate().toString());
         dos.writeUTF(position.getTitle());
-        dos.writeUTF(position.getDescription());
+        dos.writeUTF(writeNull(position.getDescription()));
     }
 
     private Section readSection(SectionType sectionName, DataInputStream dis) throws IOException {
-        Section section = null;
         int sectionSize;
-        LOG.info("read Section = " + sectionName);
         switch (sectionName) {
             case PERSONAL:
             case OBJECTIVE:
-                section = new TextSection(dis.readUTF());
-                LOG.info("Text Section = " + section);
-                break;
+                return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                List<String> listItems = null;
+                List<String> listItems = new ArrayList<>();
                 sectionSize = dis.readInt();
-                LOG.info("size = " + sectionSize);
                 for (int i = 0; i < sectionSize; i++) {
                     listItems.add(dis.readUTF());
                 }
-                section = new ListSection(listItems);
-                break;
+                return new ListSection(listItems);
             case EXPERIENCE:
             case EDUCATION:
-                List<Organization> organizationItems = null;
+                List<Organization> organizationItems = new ArrayList<>();
                 sectionSize = dis.readInt();
-                LOG.info("size = " + sectionSize);
                 for (int i = 0; i < sectionSize; i++) {
                     organizationItems.add(readOrganization(dis));
                 }
-                section = new OrganizationSection(organizationItems);
-                break;
+                return new OrganizationSection(organizationItems);
+            default:
+                throw new IllegalStateException();
         }
-        return section;
     }
 
     private Organization readOrganization(DataInputStream dis) throws IOException {
-        List<Organization.Position> positions = null;
+        List<Organization.Position> positions = new ArrayList<>();
+        String name = readNull(dis.readUTF());
+        String url = readNull(dis.readUTF());
 
-        Link link = new Link(dis.readUTF(), dis.readUTF());
+        Link link = new Link(name, url);
         int positionSize = dis.readInt();
 
         for (int i = 0; i < positionSize; i++) {
             positions.add(readPosition(dis));
         }
-        Organization organization = new Organization(link,  positions);
+        Organization organization = new Organization(link, positions);
         return organization;
     }
 
     private Organization.Position readPosition(DataInputStream dis) throws IOException {
-        return new Organization.Position(LocalDate.parse(dis.readUTF()),LocalDate.parse(dis.readUTF()),dis.readUTF(),dis.readUTF());
+        LocalDate startDate = LocalDate.parse(dis.readUTF());
+        LocalDate endDate = LocalDate.parse(dis.readUTF());
+        String title = dis.readUTF();
+        String description = readNull(dis.readUTF());
+        return new Organization.Position(startDate, endDate, title, description);
     }
 }
