@@ -1,19 +1,21 @@
 package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.*;
-import com.urise.webapp.storage.AbstractStorage;
-import com.urise.webapp.util.LocalDateAdapter;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static com.urise.webapp.util.NullDataString.*;
+import static com.urise.webapp.util.StringUtil.*;
 
 public class DataStreamSerializer implements StreamSerializer {
+    @FunctionalInterface
+    interface FunctionalElement<T> {
+        void write(T t) throws IOException;
+    }
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
@@ -21,18 +23,29 @@ public class DataStreamSerializer implements StreamSerializer {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
+            writeWithException(dos, contacts.entrySet(), entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
+            });
+            /*dos.writeInt(contacts.size());
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
-            // TODO implements sections
+            }*/
+
             Map<SectionType, Section> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 writeSection(entry.getKey(), entry.getValue(), dos);
             }
+        }
+    }
+
+    private <T> void writeWithException (DataOutputStream dos, Collection<T> collection, FunctionalElement<T> functionalElement) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            functionalElement.write(item);
         }
     }
 
@@ -46,7 +59,7 @@ public class DataStreamSerializer implements StreamSerializer {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            // TODO implements sections
+
             int sizeSection = dis.readInt();
             Section section;
             for (int i = 0; i < sizeSection; i++) {
@@ -84,8 +97,8 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private void writeOrganization(Organization organization, DataOutputStream dos) throws IOException {
-        dos.writeUTF(writeNull(organization.getHomePage().getName()));
-        dos.writeUTF(writeNull(organization.getHomePage().getUrl()));
+        dos.writeUTF(convertToEmptyIfNull(organization.getHomePage().getName()));
+        dos.writeUTF(convertToEmptyIfNull(organization.getHomePage().getUrl()));
         List<Organization.Position> positions = organization.getPositions();
         dos.writeInt(positions.size());
         for (Organization.Position position : organization.getPositions()) {
@@ -94,10 +107,12 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private void writePosition(Organization.Position position, DataOutputStream dos) throws IOException {
-        dos.writeUTF(position.getStartDate().toString());
-        dos.writeUTF(position.getEndDate().toString());
+        dos.writeInt(position.getStartDate().getYear());
+        dos.writeInt(position.getStartDate().getMonthValue());
+        dos.writeInt(position.getEndDate().getYear());
+        dos.writeInt(position.getEndDate().getMonthValue());
         dos.writeUTF(position.getTitle());
-        dos.writeUTF(writeNull(position.getDescription()));
+        dos.writeUTF(convertToEmptyIfNull(position.getDescription()));
     }
 
     private Section readSection(SectionType sectionName, DataInputStream dis) throws IOException {
@@ -129,8 +144,8 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private Organization readOrganization(DataInputStream dis) throws IOException {
         List<Organization.Position> positions = new ArrayList<>();
-        String name = readNull(dis.readUTF());
-        String url = readNull(dis.readUTF());
+        String name = convertToNullIfEmpty(dis.readUTF());
+        String url = convertToNullIfEmpty(dis.readUTF());
 
         Link link = new Link(name, url);
         int positionSize = dis.readInt();
@@ -143,10 +158,14 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private Organization.Position readPosition(DataInputStream dis) throws IOException {
-        LocalDate startDate = LocalDate.parse(dis.readUTF());
-        LocalDate endDate = LocalDate.parse(dis.readUTF());
+        int dateYear = dis.readInt();
+        int dateMonth = dis.readInt();
+        LocalDate startDate = LocalDate.of(dateYear,dateMonth,1);
+        dateYear = dis.readInt();
+        dateMonth = dis.readInt();
+        LocalDate endDate = LocalDate.of(dateYear,dateMonth,1);
         String title = dis.readUTF();
-        String description = readNull(dis.readUTF());
+        String description = convertToNullIfEmpty(dis.readUTF());
         return new Organization.Position(startDate, endDate, title, description);
     }
 }
