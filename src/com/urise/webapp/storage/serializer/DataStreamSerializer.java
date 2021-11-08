@@ -12,25 +12,7 @@ import static com.urise.webapp.util.StringUtil.convertToEmptyIfNull;
 import static com.urise.webapp.util.StringUtil.convertToNullIfEmpty;
 
 public class DataStreamSerializer implements StreamSerializer {
-    @FunctionalInterface
-    interface FunctionalElementWriter<T> {
-        void write(T t) throws IOException;
-    }
 
-    private interface FunctionalElementReadMap {
-        void process() throws IOException;
-    }
-
-    @FunctionalInterface
-    interface FunctionalElementReadList<T> {
-        T read() throws IOException;
-    }
-
-    public static void WriteDate(DataOutputStream dos, LocalDate date) throws IOException {
-        dos.writeInt(date.getYear());
-        dos.writeInt(date.getMonthValue());
-    }
-    
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -57,11 +39,12 @@ public class DataStreamSerializer implements StreamSerializer {
                     case EXPERIENCE:
                     case EDUCATION:
                         writeWithException(dos, ((OrganizationSection) section).getOrganizations(), org -> {
-                            dos.writeUTF(convertToEmptyIfNull(org.getHomePage().getName()));
-                            dos.writeUTF(convertToEmptyIfNull(org.getHomePage().getUrl()));
+                            Link link = org.getHomePage();
+                            dos.writeUTF(convertToEmptyIfNull(link.getName()));
+                            dos.writeUTF(convertToEmptyIfNull(link.getUrl()));
                             writeWithException(dos, org.getPositions(), pos -> {
-                                WriteDate(dos, pos.getStartDate());
-                                WriteDate(dos, pos.getEndDate());
+                                writeDate(dos, pos.getStartDate());
+                                writeDate(dos, pos.getEndDate());
                                 dos.writeUTF(pos.getTitle());
                                 dos.writeUTF(convertToEmptyIfNull(pos.getDescription()));
                             });
@@ -69,13 +52,6 @@ public class DataStreamSerializer implements StreamSerializer {
                         break;
                 }
             });
-        }
-    }
-
-    private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, FunctionalElementWriter<T> functionalElementWriter) throws IOException {
-        dos.writeInt(collection.size());
-        for (T item : collection) {
-            functionalElementWriter.write(item);
         }
     }
 
@@ -93,6 +69,22 @@ public class DataStreamSerializer implements StreamSerializer {
             });
             return resume;
         }
+    }
+
+    private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, FunctionalElementWriter<T> functionalElementWriter) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            functionalElementWriter.write(item);
+        }
+    }
+
+    private void writeDate(DataOutputStream dos, LocalDate date) throws IOException {
+        dos.writeInt(date.getYear());
+        dos.writeInt(date.getMonthValue());
+    }
+
+    private LocalDate readDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
     }
 
     private <T> void readMapWithException(DataInputStream dis, FunctionalElementReadMap reader) throws IOException {
@@ -116,7 +108,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         readListWithException(dis, () -> new Organization(
                                 new Link(convertToNullIfEmpty(dis.readUTF()), convertToNullIfEmpty(dis.readUTF())),
                                 readListWithException(dis, () -> new Organization.Position(
-                                        LocalDate.of(dis.readInt(), dis.readInt(), 1), LocalDate.of(dis.readInt(), dis.readInt(), 1), dis.readUTF(), convertToNullIfEmpty(dis.readUTF())
+                                        readDate(dis), readDate(dis), dis.readUTF(), convertToNullIfEmpty(dis.readUTF())
                                 ))
                         )));
             default:
@@ -131,5 +123,20 @@ public class DataStreamSerializer implements StreamSerializer {
             list.add(reader.read());
         }
         return list;
+    }
+
+    @FunctionalInterface
+    interface FunctionalElementWriter<T> {
+        void write(T t) throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface FunctionalElementReadMap {
+        void process() throws IOException;
+    }
+
+    @FunctionalInterface
+    interface FunctionalElementReadList<T> {
+        T read() throws IOException;
     }
 }
