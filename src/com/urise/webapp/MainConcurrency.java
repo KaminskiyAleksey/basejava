@@ -1,6 +1,5 @@
 package com.urise.webapp;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,30 +61,33 @@ public class MainConcurrency {
         });
         System.out.println(mainConcurrency.counter);
 
-        deadLock(lock1, lock2);
-        deadLock(lock2, lock1);
+        Deadlock.deadLock(lock1, lock2);
+        Deadlock.deadLock(lock2, lock1);
     }
 
-    private static void deadLock(Object lock1, Object lock2) {
-        Thread thread0 = new Thread() {
-            public void run() {
-                System.out.println("Wait " + lock1 + " " + new Timestamp(System.currentTimeMillis()));
+    public static class Deadlock {
+        private static void deadLock(Object lock1, Object lock2) {
+            new Thread(() -> {
+                printThreadInfo(" wait object " + lock1);
                 synchronized (lock1) {
-                    System.out.println("Capture " + lock1 + " " + new Timestamp(System.currentTimeMillis()));
+                    printThreadInfo(" capture object " + lock1);
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    System.out.println("Wait " + lock2 + " " + new Timestamp(System.currentTimeMillis()));
+                    printThreadInfo(" wait object " + lock2);
                     synchronized (lock2) {
-                        System.out.println("Capture " + lock2 + " " + new Timestamp(System.currentTimeMillis()));
+                        printThreadInfo(" capture object " + lock2);
                     }
                 }
-            }
-        };
-        thread0.start();
+            }).start();
+        }
+
+        private static void printThreadInfo(String message) {
+            System.out.println(Thread.currentThread().getName() + message);
+        }
     }
 
     private synchronized void inc() {
