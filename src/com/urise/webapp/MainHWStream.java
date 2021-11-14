@@ -12,19 +12,25 @@ public class MainHWStream {
         System.out.println(result);
 
         List<Integer> integers = Arrays.asList(0, 1, 2, 3, 4, 5, 1);
-        List<Integer> integersResult = oddOrEven(integers);
-        System.out.println(integersResult);
+        System.out.println(oddOrEven(integers));
     }
 
     public static int minValue(int[] values) {
-        return IntStream.of(values).distinct().sorted().reduce((s1, s2) -> s1 * 10 + s2).getAsInt();
+        return IntStream.of(values)
+                .distinct()
+                .sorted()
+                .reduce(0, (s1, s2) -> s1 * 10 + s2);
     }
 
     public static List<Integer> oddOrEven(List<Integer> integers) {
-        if (integers.stream().mapToInt(num -> num).sum() % 2 != 0) {
-            return (List<Integer>) integers.stream().mapToInt(num -> num).filter(o -> o % 2 == 0).boxed().collect(Collectors.toList());
-        } else {
-            return (List<Integer>) integers.stream().mapToInt(num -> num).filter(o -> o % 2 != 0).boxed().collect(Collectors.toList());
-        }
+        int evenOrOdd = integers.stream()
+                .mapToInt(num -> num)
+                .sum() % 2;
+
+        return integers.stream()
+                .mapToInt(num -> num)
+                .filter(o -> o % 2 != evenOrOdd)
+                .boxed()
+                .collect(Collectors.toList());
     }
 }
