@@ -28,9 +28,7 @@ public class MainHWStream {
                 .sum() % 2;
 
         return integers.stream()
-                .mapToInt(num -> num)
                 .filter(o -> o % 2 != evenOrOdd)
-                .boxed()
                 .collect(Collectors.toList());
     }
 }
