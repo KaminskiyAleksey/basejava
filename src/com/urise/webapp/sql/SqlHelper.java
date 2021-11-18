@@ -22,12 +22,17 @@ public class SqlHelper {
         }
     }
 
-    public PreparedStatement execute(String sql, PreparedStatement executor) {
+    public <T> T execute(String sql, ExecuteSql<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            return ps;
+            return executor.execute(ps);
         } catch (SQLException e) {
             throw new StorageException(e);
         }
+    }
+
+    @FunctionalInterface
+    public interface ExecuteSql<T> {
+        T execute(PreparedStatement st) throws SQLException;
     }
 }
