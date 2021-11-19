@@ -1,6 +1,6 @@
 package com.urise.webapp.sql;
 
-import com.urise.webapp.exception.StorageException;
+import com.urise.webapp.exception.convertSqlException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,21 +13,12 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public void execute(String sql) {
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.execute();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
     public <T> T execute(String sql, ExecuteSql<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
         } catch (SQLException e) {
-            throw new StorageException(e);
+            throw new convertSqlException(e);
         }
     }
 
