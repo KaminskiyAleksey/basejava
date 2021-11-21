@@ -13,7 +13,7 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T execute(String sql, ExecuteSql<T> executor) {
+    public <T> T execute(String sql, executeSql<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
@@ -23,7 +23,7 @@ public class SqlHelper {
     }
 
     @FunctionalInterface
-    public interface ExecuteSql<T> {
+    public interface executeSql<T> {
         T execute(PreparedStatement st) throws SQLException;
     }
 }

@@ -19,7 +19,7 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         sqlHelper.execute("DELETE FROM resume", preparedStatement -> {
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             return null;
         });
     }
@@ -39,10 +39,11 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume r) {
         sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", preparedStatement -> {
+            String uuid = r.getUuid();
             preparedStatement.setString(1, r.getFullName());
-            preparedStatement.setString(2, r.getUuid());
+            preparedStatement.setString(2, uuid);
             if (preparedStatement.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
+                throw new NotExistStorageException(uuid);
             }
             return null;
         });
@@ -53,7 +54,7 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", preparedStatement -> {
             preparedStatement.setString(1, r.getUuid());
             preparedStatement.setString(2, r.getFullName());
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             return null;
         });
     }
