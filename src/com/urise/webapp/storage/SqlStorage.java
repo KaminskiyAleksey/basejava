@@ -6,7 +6,10 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     public final SqlHelper sqlHelper;
@@ -49,10 +52,11 @@ public class SqlStorage implements Storage {
     public void update(Resume r) {
         sqlHelper.transactionalExecute(conn -> {
             try (PreparedStatement preparedStatement = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                String uuid = r.getUuid();
                 preparedStatement.setString(1, r.getFullName());
-                preparedStatement.setString(2, r.getUuid());
+                preparedStatement.setString(2, uuid);
                 if (preparedStatement.executeUpdate() != 1) {
-                    throw new NotExistStorageException(r.getUuid());
+                    throw new NotExistStorageException(uuid);
                 }
             }
             deleteContacts(conn, r);
@@ -93,7 +97,7 @@ public class SqlStorage implements Storage {
                 "        ON r.uuid = c.resume_uuid " +
                 " ORDER BY full_name,uuid", preparedStatement -> {
             ResultSet rs = preparedStatement.executeQuery();
-            Map<String, Resume> map = new HashMap<>();
+            Map<String, Resume> map = new LinkedHashMap<>();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
                 Resume resume = map.get(uuid);
@@ -104,7 +108,6 @@ public class SqlStorage implements Storage {
                 addContact(rs, resume);
             }
             List<Resume> r = new ArrayList<>(map.values());
-            Collections.sort(r);
             return r;
         });
     }
@@ -125,12 +128,11 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteContacts(Connection conn, Resume r) {
-        sqlHelper.execute("DELETE  FROM contact WHERE resume_uuid=?", ps -> {
+    private void deleteContacts(Connection conn, Resume r) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE  FROM contact WHERE resume_uuid=?");) {
             ps.setString(1, r.getUuid());
             ps.execute();
-            return null;
-        });
+        }
     }
 
     private void insertContact(Connection conn, Resume r) throws SQLException {
