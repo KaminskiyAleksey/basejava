@@ -107,8 +107,7 @@ public class SqlStorage implements Storage {
                 }
                 addContact(rs, resume);
             }
-            List<Resume> r = new ArrayList<>(map.values());
-            return r;
+            return new ArrayList<>(map.values());
         });
     }
 

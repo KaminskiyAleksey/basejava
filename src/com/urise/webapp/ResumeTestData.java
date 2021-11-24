@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import static com.urise.webapp.model.ContactType.MAIL;
 import static com.urise.webapp.model.ContactType.PHONE;
-import static com.urise.webapp.model.SectionType.*;
 
 public class ResumeTestData {
 
@@ -59,12 +58,12 @@ public class ResumeTestData {
         resume.addContact(PHONE, "+7(921) 855-0482");
         resume.addContact(MAIL, "gkislin@yandex.ru");
 
-        resume.addSection(PERSONAL, personalSection);
+        /*resume.addSection(PERSONAL, personalSection);
         resume.addSection(OBJECTIVE, objectiveSection);
         resume.addSection(ACHIEVEMENT, achivementSection);
         resume.addSection(QUALIFICATIONS, qualificationsSection);
         resume.addSection(EXPERIENCE, organizationSectionExperience);
-        resume.addSection(EDUCATION, organizationSectionEducation);
+        resume.addSection(EDUCATION, organizationSectionEducation);*/
 
         return resume;
     }
