@@ -1,7 +1,6 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
-import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.Storage;
 
@@ -45,14 +44,14 @@ public class ResumeServlet extends HttpServlet {
                         "<body>\n" +
                         "<table border=\"1\">\n" +
                         "    <tr>\n" +
+                        "        <th>Uuid</th>\n" +
                         "        <th>Имя</th>\n" +
-                        "        <th>Email</th>\n" +
                         "    </tr>\n");
         for (Resume resume : storage.getAllSorted()) {
             writer.write(
                     "<tr>\n" +
+                            "     <td>" + resume.getUuid() + "</td>\n" +
                             "     <td>" + resume.getFullName() + "</td>\n" +
-                            "     <td>" + resume.getContact(ContactType.MAIL) + "</td>\n" +
                             "</tr>\n");
         }
         writer.write("</table>\n" +
