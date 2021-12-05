@@ -28,4 +28,8 @@ public class JsonParser {
         return GSON.toJson(object, clazz);
     }
 
+    public static <T> String write(T object) {
+        return GSON.toJson(object);
+    }
+
 }

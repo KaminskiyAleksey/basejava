@@ -55,8 +55,8 @@ public class ResumeTestData {
 
         //CONTACTS
 
-        resume.addContact(PHONE, "+7(921) 855-0482");
-        resume.addContact(MAIL, "gkislin@yandex.ru");
+        resume.setContact(PHONE, "+7(921) 855-0482");
+        resume.setContact(MAIL, "gkislin@yandex.ru");
 
         /*resume.addSection(PERSONAL, personalSection);
         resume.addSection(OBJECTIVE, objectiveSection);
