@@ -30,6 +30,9 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     public Resume(String uuid, String fullName) {
+        if (fullName.trim().isEmpty()) {
+            throw new NullPointerException("fullName must not be empty");
+        }
         Objects.requireNonNull(uuid, "uuid must not be null");
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;

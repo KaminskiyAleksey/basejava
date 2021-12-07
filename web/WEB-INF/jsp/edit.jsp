@@ -5,6 +5,7 @@
 <%@ page import="com.urise.webapp.model.Section" %>
 <%@ page import="com.urise.webapp.model.TextSection" %>
 <%@ page import="com.urise.webapp.model.OrganizationSection" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -31,18 +32,19 @@
             </dl>
         </c:forEach>
         <hr>
-        <c:forEach var="type" items="<%=SectionType.values()%>">
-            <c:set var="section" value="${resume.getSection(type)}"/>
-            <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
-            <h2><a>${type.title}</a></h2>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <jsp:useBean id="sectionType" type="com.urise.webapp.model.SectionType"/>
+            <h2><a>${sectionType.title}</a></h2>
             <c:choose>
-                <c:when test="${type=='PERSONAL' || type=='OBJECTIVE'}">
-                    <textarea name='${type}'><%=section%></textarea>
+                <c:when test="${sectionType=='PERSONAL' || sectionType=='OBJECTIVE'}">
+                    <textarea name='${sectionType}'><%=resume.getSection(sectionType)%></textarea>
                 </c:when>
-                <c:when test="${type=='QUALIFICATIONS' || type=='ACHIEVEMENT'}">
-                    <textarea name='${type}' ><%=String.join("<@#>", ((ListSection) section).getItems())%></textarea>
+                <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
+                    <textarea
+                            name='${sectionType}'><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).replaceAll("\\n\\W+","")%>
+                            </textarea>
                 </c:when>
-                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
                     &nbsp;
                 </c:when>
             </c:choose>

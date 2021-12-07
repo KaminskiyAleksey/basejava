@@ -38,20 +38,22 @@ public class ResumeServlet extends HttpServlet {
         }
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-
-            switch (type) {
-                case OBJECTIVE:
-                case PERSONAL:
-                    r.setSection(type, new TextSection(value));
-                    break;
-                case ACHIEVEMENT:
-                case QUALIFICATIONS:
-                    r.setSection(type, new ListSection(value.split("<@#>")));
-                    break;
-                case EDUCATION:
-                case EXPERIENCE:
-                    break;
-
+            if (HtmlUtil.isEmpty(value)) {
+                r.getSections().remove(type);
+            } else {
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        r.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.setSection(type, new ListSection(value.split("\\n")));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        break;
+                }
             }
         }
         storage.update(r);
