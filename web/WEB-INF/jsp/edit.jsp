@@ -41,7 +41,7 @@
                 </c:when>
                 <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
                     <textarea
-                            name='${sectionType}'><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).replaceAll("\\n\\W+","")%>
+                            name='${sectionType}'><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r","")%>
                             </textarea>
                 </c:when>
                 <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
@@ -50,7 +50,7 @@
             </c:choose>
         </c:forEach>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

@@ -13,6 +13,8 @@ public class ListSection extends Section {
     public ListSection() {
     }
 
+    public static final ListSection EMPTY = new ListSection("");
+
     public ListSection(String... items) {
         this(Arrays.asList(items));
     }
