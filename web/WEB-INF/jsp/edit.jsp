@@ -40,9 +40,7 @@
                     <textarea name='${sectionType}'><%=resume.getSection(sectionType)%></textarea>
                 </c:when>
                 <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
-                    <textarea
-                            name='${sectionType}'><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r","")%>
-                            </textarea>
+                    <textarea name='${sectionType}'><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r","")%></textarea>
                 </c:when>
                 <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
                     &nbsp;

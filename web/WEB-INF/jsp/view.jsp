@@ -37,20 +37,14 @@
                 <c:when test="${type=='OBJECTIVE' || type=='PERSONAL'}">
                     <tr>
                         <td colspan="2">
-                            <h3>
-                                <%=((TextSection) section).getContent()%>
-                            </h3>
+                            <h3><%=((TextSection) section).getContent()%></h3>
                         </td>
                     </tr>
                 </c:when>
                 <c:when test="${type=='QUALIFICATIONS' || type=='ACHIEVEMENT'}">
                     <tr>
                         <td colspan="2">
-                            <ul>
-                                <c:forEach var="item" items="<%=((ListSection) section).getItems()%>">
-                                    <li>${item}</li>
-                                </c:forEach>
-                            </ul>
+                            <ul><c:forEach var="item" items="<%=((ListSection) section).getItems()%>"><li>${item}</li></c:forEach></ul>
                         </td>
                     </tr>
                 </c:when>

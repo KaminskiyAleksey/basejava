@@ -28,15 +28,23 @@ public class ResumeServlet extends HttpServlet {
         String fullName = request.getParameter("fullName");
 
         final boolean isCreate = (uuid == null || uuid.length() == 0);
-        if(fullName.trim() == ""){
-            throw new IllegalArgumentException("fullName is empty");
-        }
+
         Resume r;
         if (isCreate) {
             r = new Resume(fullName);
         } else {
             r = storage.get(uuid);
             r.setFullName(fullName);
+        }
+
+        if (fullName.trim() == "") {
+            if (isCreate) {
+                response.sendRedirect("resume?action=add");
+            }
+            else {
+                response.sendRedirect("resume?uuid=" + uuid + "&action=edit");
+            }
+            return;
         }
 
         for (ContactType type : ContactType.values()) {
@@ -55,7 +63,7 @@ public class ResumeServlet extends HttpServlet {
                 switch (type) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        r.setSection(type, new TextSection(value.trim().replaceAll("\r\n", "")));
+                        r.setSection(type, new TextSection(value.trim()));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
