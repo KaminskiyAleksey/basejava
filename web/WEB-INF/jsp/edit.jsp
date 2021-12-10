@@ -23,6 +23,7 @@
         <dl>
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <font color="red">${full_name_error}</font>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">

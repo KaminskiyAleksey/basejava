@@ -22,7 +22,7 @@ public class ResumeServlet extends HttpServlet {
         storage = Config.get().getStorage();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
@@ -39,11 +39,12 @@ public class ResumeServlet extends HttpServlet {
 
         if (fullName.trim() == "") {
             if (isCreate) {
-                response.sendRedirect("resume?action=add");
+                request.setAttribute("resume", Resume.EMPTY);
+            } else {
+                request.setAttribute("resume", r);
             }
-            else {
-                response.sendRedirect("resume?uuid=" + uuid + "&action=edit");
-            }
+            request.setAttribute("full_name_error", "Имя не должно быть пустым");
+            request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
             return;
         }
 
