@@ -22,7 +22,7 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}" placeholder="Имя"></dd>
             <font color="red">${full_name_error}</font>
         </dl>
         <h3>Контакты:</h3>
@@ -38,10 +38,10 @@
             <h2><a>${sectionType.title}</a></h2>
             <c:choose>
                 <c:when test="${sectionType=='PERSONAL' || sectionType=='OBJECTIVE'}">
-                    <textarea name='${sectionType}'><%=resume.getSection(sectionType)%></textarea>
+                    <textarea name='${sectionType}' rows="4" cols="50"><%=resume.getSection(sectionType)%></textarea>
                 </c:when>
                 <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
-                    <textarea name='${sectionType}'><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r","")%></textarea>
+                    <textarea name='${sectionType}' rows="4" cols="50"><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r","")%></textarea>
                 </c:when>
                 <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
                     &nbsp;
