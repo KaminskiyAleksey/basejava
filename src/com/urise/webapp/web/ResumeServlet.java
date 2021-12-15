@@ -68,7 +68,7 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.setSection(type, new ListSection(value.trim().split("\r\n")));
+                        r.setSection(type, new ListSection(value.trim().replaceAll("(\r\n){2,}","\r\n").split("\r\n")));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
