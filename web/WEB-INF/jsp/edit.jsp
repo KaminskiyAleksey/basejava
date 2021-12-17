@@ -41,10 +41,51 @@
                     <textarea name='${sectionType}' rows="4" cols="50"><%=resume.getSection(sectionType)%></textarea>
                 </c:when>
                 <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
-                    <textarea name='${sectionType}' rows="4" cols="50"><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r","")%></textarea>
+                    <textarea name='${sectionType}' rows="4"
+                              cols="50"><%=String.join("\n", ((ListSection) resume.getSection(sectionType)).getItems()).trim().replaceAll("\r", "")%></textarea>
                 </c:when>
                 <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
-                    &nbsp;
+                    <c:forEach var="org" items="<%=((OrganizationSection) resume.getSection(sectionType)).getOrganizations()%>"
+                               varStatus="counter">
+                        <dl>
+                            <dt>Название учереждения:</dt>
+                            <dd><input type="text" name='${sectionType}' size=100 value="${org.homePage.name}"></dd>
+                        </dl>
+                        <dl>
+                            <dt>Сайт учереждения:</dt>
+                            <dd><input type="text" name='${sectionType}url' size=100 value="${org.homePage.url}"></dd>
+                            </dd>
+                        </dl>
+                        <br>
+                        <div style="margin-left: 30px">
+                            <c:forEach var="pos" items="${org.positions}">
+                                <jsp:useBean id="pos" type="com.urise.webapp.model.Organization.Position"/>
+                                <dl>
+                                    <dt>Начальная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${sectionType}${counter.index}startDate" size=10
+                                               value="<%=DateUtil.format(pos.getStartDate())%>" placeholder="MM/yyyy">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>Конечная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${sectionType}${counter.index}endDate" size=10
+                                               value="<%=DateUtil.format(pos.getEndDate())%>" placeholder="MM/yyyy">
+                                </dl>
+                                <dl>
+                                    <dt>Должность:</dt>
+                                    <dd><input type="text" name='${sectionType}${counter.index}title' size=75
+                                               value="${pos.title}">
+                                </dl>
+                                <dl>
+                                    <dt>Описание:</dt>
+                                    <dd><textarea name="${sectionType}${counter.index}description" rows=5
+                                                  cols=75>${pos.description}</textarea></dd>
+                                </dl>
+                            </c:forEach>
+                        </div>
+                    </c:forEach>
                 </c:when>
             </c:choose>
         </c:forEach>
